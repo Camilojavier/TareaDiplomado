@@ -2,6 +2,7 @@ package com.diplomado.tarea.web.rest;
 
 import com.diplomado.tarea.domain.entities.UserDetail;
 import com.diplomado.tarea.domain.services.UserDetailService;
+import com.diplomado.tarea.web.API;
 import com.diplomado.tarea.web.UserDetailAPI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +15,11 @@ import java.net.URISyntaxException;
 public class UserDetailController {
     private final UserDetailService userDetailService;
 
-    public UserDetailController(UserDetailService userDetailService) {
+    public UserDetailController(final UserDetailService userDetailService) {
         this.userDetailService = userDetailService;
     }
 
-    @GetMapping(UserDetailAPI.userDetailByUser)
+    @GetMapping(API.userPath)
     public ResponseEntity<UserDetail> getDetailByUser(@PathVariable final Long userId) {
         return ResponseEntity.ok().body(userDetailService.getDetailByUser(userId));
     }

@@ -71,4 +71,16 @@ public class User {
     public void setCreatedAt(Timestamp created_at) {
         this.createdAt = created_at;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", createdAt=" + createdAt +
+                ", usersDetail=" + usersDetail +
+                '}';
+    }
 }

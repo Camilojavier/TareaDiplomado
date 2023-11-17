@@ -2,7 +2,6 @@ package com.diplomado.tarea.web.rest;
 
 import com.diplomado.tarea.domain.entities.User;
 import com.diplomado.tarea.domain.services.UserService;
-import com.diplomado.tarea.web.API;
 import com.diplomado.tarea.web.UserAPI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(final UserService userService) {
         this.userService = userService;
     }
     @GetMapping

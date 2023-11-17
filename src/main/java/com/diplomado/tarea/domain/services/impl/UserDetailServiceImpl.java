@@ -13,20 +13,20 @@ public class UserDetailServiceImpl implements UserDetailService {
     private final UserDetailRepository userDetailRepository;
     private final UserRepository userRepository;
 
-    public UserDetailServiceImpl(UserDetailRepository userDetailRepository, UserRepository userRepository) {
+    public UserDetailServiceImpl(final UserDetailRepository userDetailRepository, final UserRepository userRepository) {
         this.userDetailRepository = userDetailRepository;
         this.userRepository = userRepository;
     }
 
     @Override
-    public UserDetail getDetailByUser(Long userId) {
+    public UserDetail getDetailByUser(final Long userId) {
         final User user = getUserById(userId);
         return userDetailRepository.findByUsers_Id(user.getId())
                 .orElseThrow(() -> new RuntimeException("UserDetail no encontrado para el usuario con ID: " + userId));
     }
 
     @Override
-    public UserDetail saveUserDetail(Long userId, UserDetail userDetail) {
+    public UserDetail saveUserDetail(final Long userId, final UserDetail userDetail) {
         final User user = getUserById(userId);
         userDetail.setUser(user);
         return userDetailRepository.save(userDetail);

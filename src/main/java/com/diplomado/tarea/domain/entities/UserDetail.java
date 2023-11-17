@@ -79,4 +79,16 @@ public class UserDetail {
     public void setUser(User user) {
         this.users = user;
     }
+
+    @Override
+    public String toString() {
+        return "UserDetail{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", birthday=" + birthday +
+                ", users=" + users +
+                '}';
+    }
 }
