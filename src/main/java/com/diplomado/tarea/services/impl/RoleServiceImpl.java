@@ -1,14 +1,14 @@
-package com.diplomado.tarea.domain.services.impl;
+package com.diplomado.tarea.services.impl;
 
 import com.diplomado.tarea.domain.entities.Role;
-import com.diplomado.tarea.domain.services.RoleService;
+import com.diplomado.tarea.services.RoleService;
 import com.diplomado.tarea.repositories.RoleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class RoleServiceImpl implements RoleService {
+public final class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
     public RoleServiceImpl(final RoleRepository roleRepository) {

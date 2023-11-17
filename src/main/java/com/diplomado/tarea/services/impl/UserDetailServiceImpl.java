@@ -1,14 +1,14 @@
-package com.diplomado.tarea.domain.services.impl;
+package com.diplomado.tarea.services.impl;
 
 import com.diplomado.tarea.domain.entities.User;
 import com.diplomado.tarea.domain.entities.UserDetail;
-import com.diplomado.tarea.domain.services.UserDetailService;
+import com.diplomado.tarea.services.UserDetailService;
 import com.diplomado.tarea.repositories.UserDetailRepository;
 import com.diplomado.tarea.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserDetailServiceImpl implements UserDetailService {
+public final class UserDetailServiceImpl implements UserDetailService {
 
     private final UserDetailRepository userDetailRepository;
     private final UserRepository userRepository;

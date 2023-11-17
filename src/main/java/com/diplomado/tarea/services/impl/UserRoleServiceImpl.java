@@ -1,9 +1,9 @@
-package com.diplomado.tarea.domain.services.impl;
+package com.diplomado.tarea.services.impl;
 
 import com.diplomado.tarea.domain.entities.Role;
 import com.diplomado.tarea.domain.entities.User;
 import com.diplomado.tarea.domain.entities.UserRole;
-import com.diplomado.tarea.domain.services.UserRoleService;
+import com.diplomado.tarea.services.UserRoleService;
 import com.diplomado.tarea.repositories.RoleRepository;
 import com.diplomado.tarea.repositories.UserRepository;
 import com.diplomado.tarea.repositories.UserRoleRepository;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserRoleServiceImpl implements UserRoleService {
+public final class UserRoleServiceImpl implements UserRoleService {
     private final UserRoleRepository userRoleRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -41,5 +41,10 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public UserRole save(final UserRole userRole) {
         return userRoleRepository.save(userRole);
+    }
+
+    @Override
+    public void delete(Integer userRoleId) {
+
     }
 }

@@ -1,4 +1,4 @@
-package com.diplomado.tarea.domain.services;
+package com.diplomado.tarea.services;
 
 import com.diplomado.tarea.domain.entities.UserDetail;
 

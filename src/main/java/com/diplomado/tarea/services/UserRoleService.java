@@ -1,4 +1,4 @@
-package com.diplomado.tarea.domain.services;
+package com.diplomado.tarea.services;
 
 import com.diplomado.tarea.domain.entities.Role;
 import com.diplomado.tarea.domain.entities.User;
@@ -12,4 +12,5 @@ public interface UserRoleService {
     List<UserRole> getUsersByRole(final Role role);
     List<UserRole> getRolesByUser(final User user);
     UserRole save(final UserRole userRole);
+    void delete(final Integer userRoleId);
 }
