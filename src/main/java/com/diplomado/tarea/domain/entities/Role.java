@@ -1,14 +1,18 @@
 package com.diplomado.tarea.domain.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = Annotations.ROLE_TABLE_NAME)
+public final class Role implements Annotations {
 
     @Id
-    @SequenceGenerator(name = "role_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
+    @SequenceGenerator(name = ROLE_SEQUENCE, allocationSize = ALLOCATION_SIZE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ROLE_SEQUENCE)
     private Integer id;
     private String name;
 
@@ -18,23 +22,6 @@ public class Role {
 
     public Role() {
     }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public String toString() {
         return "Role{" +

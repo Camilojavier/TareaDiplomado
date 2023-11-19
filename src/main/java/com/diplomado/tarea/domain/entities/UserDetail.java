@@ -1,24 +1,28 @@
 package com.diplomado.tarea.domain.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "users_detail")
-public class UserDetail {
+@Table(name = Annotations.USER_DETAIL_TABLE_NAME)
+public final class UserDetail implements Annotations{
     @Id
-    @SequenceGenerator(name = "user_detail_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_detail_seq")
+    @SequenceGenerator(name = USER_DETAIL_SEQUENCE, allocationSize = ALLOCATION_SIZE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = USER_DETAIL_SEQUENCE)
     private Long id;
-    @Column(name = "first_name")
+    @Column(name = FIRST_NAME)
     private String firstName;
-    @Column(name = "last_name")
+    @Column(name = LAST_NAME)
     private String lastName;
     private Integer age;
     private Date birthday;
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = USER_ID, unique = true)
     private User users;
 
     public UserDetail(String firstName, String lastName, Integer age, Date birthday, User users) {
@@ -30,65 +34,5 @@ public class UserDetail {
     }
 
     public UserDetail() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
-    public User getUser() {
-        return users;
-    }
-
-    public void setUser(User user) {
-        this.users = user;
-    }
-
-    @Override
-    public String toString() {
-        return "UserDetail{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", age=" + age +
-                ", birthday=" + birthday +
-                ", users=" + users +
-                '}';
     }
 }

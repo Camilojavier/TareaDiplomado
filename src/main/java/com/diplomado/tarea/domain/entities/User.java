@@ -1,23 +1,27 @@
 package com.diplomado.tarea.domain.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = Annotations.USER_TABLE_NAME)
+public final class User implements Annotations{
 
     @Id
-    @SequenceGenerator(name = "user_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+    @SequenceGenerator(name = USER_SEQUENCE, allocationSize = ALLOCATION_SIZE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = USER_SEQUENCE)
     private Long id;
     private String username;
     private String password;
     private String email;
-    @Column(name = "created_at")
+    @Column(name = CREATED_AT)
     private Timestamp createdAt;
-    @OneToOne(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(mappedBy = USER_TABLE_NAME, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserDetail usersDetail;
 
     public User(String username, String password, String email, Timestamp createdAt) {
@@ -29,58 +33,5 @@ public class User {
 
     public User() {
 
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp created_at) {
-        this.createdAt = created_at;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", createdAt=" + createdAt +
-                ", usersDetail=" + usersDetail +
-                '}';
     }
 }

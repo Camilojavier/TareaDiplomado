@@ -1,25 +1,29 @@
 package com.diplomado.tarea.domain.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "user_role")
-public class UserRole {
+@Table(name = Annotations.USER_ROLE_TABLE_NAME)
+public final class UserRole implements Annotations{
 
     @Id
-    @SequenceGenerator(name = "user_role_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_role_seq")
+    @SequenceGenerator(name = USER_ROLE_SEQUENCE, allocationSize = ALLOCATION_SIZE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = USER_ROLE_SEQUENCE)
     private Integer id;
     private Boolean active;
-    @Column(name = "created_at")
+    @Column(name = CREATED_AT)
     private Timestamp createdAt;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = USER_ID)
     private User users;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = ROLE_ID)
     private Role roles;
 
     public UserRole() {
@@ -30,56 +34,5 @@ public class UserRole {
         this.createdAt = createdAt;
         this.users = users;
         this.roles = roles;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public User getUsers() {
-        return users;
-    }
-
-    public void setUsers(User users) {
-        this.users = users;
-    }
-
-    public Role getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Role roles) {
-        this.roles = roles;
-    }
-
-    @Override
-    public String toString() {
-        return "UserRole{" +
-                "id=" + id +
-                ", active=" + active +
-                ", createdAt=" + createdAt +
-                ", users=" + users +
-                ", roles=" + roles +
-                '}';
     }
 }
