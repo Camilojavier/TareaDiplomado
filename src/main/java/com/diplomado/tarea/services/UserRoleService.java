@@ -1,7 +1,5 @@
 package com.diplomado.tarea.services;
 
-import com.diplomado.tarea.dto.RoleDTO;
-import com.diplomado.tarea.dto.UserDTO;
 import com.diplomado.tarea.dto.UserRoleDTO;
 
 import java.util.List;

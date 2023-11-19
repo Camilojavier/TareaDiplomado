@@ -54,15 +54,14 @@ public final class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<UserRoleDTO> createUserRoles(UserRoleDTO... userRoles) {
-        List<UserRoleDTO> createdUserRoles = userRoleRepository.saveAll(
+
+        return userRoleRepository.saveAll(
                         Arrays.stream(userRoles)
                                 .map(userRoleMapper::toEntity)
                                 .collect(Collectors.toList())
                 ).stream()
                 .map(userRoleMapper::toDto)
                 .collect(Collectors.toList());
-
-        return createdUserRoles;
     }
 
     @Override

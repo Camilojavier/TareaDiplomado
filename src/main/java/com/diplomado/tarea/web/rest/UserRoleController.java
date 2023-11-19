@@ -1,6 +1,5 @@
 package com.diplomado.tarea.web.rest;
 
-import com.diplomado.tarea.dto.UserDTO;
 import com.diplomado.tarea.dto.UserRoleDTO;
 import com.diplomado.tarea.services.UserRoleService;
 import com.diplomado.tarea.web.API;
