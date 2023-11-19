@@ -1,38 +1,48 @@
 package com.diplomado.tarea.services.impl;
 
-import com.diplomado.tarea.domain.entities.User;
-import com.diplomado.tarea.domain.entities.UserDetail;
-import com.diplomado.tarea.services.UserDetailService;
+import com.diplomado.tarea.dto.UserDetailDTO;
 import com.diplomado.tarea.repositories.UserDetailRepository;
-import com.diplomado.tarea.repositories.UserRepository;
+import com.diplomado.tarea.services.UserDetailService;
+import com.diplomado.tarea.services.mapper.UserDetailMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public final class UserDetailServiceImpl implements UserDetailService {
 
     private final UserDetailRepository userDetailRepository;
-    private final UserRepository userRepository;
 
-    public UserDetailServiceImpl(final UserDetailRepository userDetailRepository, final UserRepository userRepository) {
+    private final UserDetailMapper userDetailMapper;
+
+    public UserDetailServiceImpl(UserDetailRepository userDetailRepository, UserDetailMapper userDetailMapper) {
         this.userDetailRepository = userDetailRepository;
-        this.userRepository = userRepository;
+        this.userDetailMapper = userDetailMapper;
     }
 
     @Override
-    public UserDetail getDetailByUser(final Long userId) {
-        final User user = getUserById(userId);
-        return userDetailRepository.findByUsers_Id(user.getId())
-                .orElseThrow(() -> new RuntimeException("UserDetail no encontrado para el usuario con ID: " + userId));
+    public List<UserDetailDTO> getUserDetails() {
+        return userDetailRepository.findAll()
+                .stream()
+                .map(userDetailMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public UserDetail saveUserDetail(final Long userId, final UserDetail userDetail) {
-        final User user = getUserById(userId);
-        userDetail.setUser(user);
-        return userDetailRepository.save(userDetail);
+    public Optional<UserDetailDTO> getUserDetail(Long userId) {
+        return userDetailRepository.findByUsers_Id(userId).map(userDetailMapper::toDto);
     }
 
-    private User getUserById(final Long userId ) {
-        return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    @Override
+    public UserDetailDTO createUserDetail(UserDetailDTO userDetail) {
+        return  userDetailMapper.toDto(userDetailRepository.save(userDetailMapper.toEntity(userDetail)));
+
+    }
+
+    @Override
+    public void deleteUserDetail(Long userId) {
+        userDetailRepository.deleteByUsers_Id(userId);
     }
 }

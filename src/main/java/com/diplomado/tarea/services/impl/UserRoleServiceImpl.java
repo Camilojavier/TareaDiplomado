@@ -1,50 +1,84 @@
 package com.diplomado.tarea.services.impl;
 
-import com.diplomado.tarea.domain.entities.Role;
-import com.diplomado.tarea.domain.entities.User;
-import com.diplomado.tarea.domain.entities.UserRole;
-import com.diplomado.tarea.services.UserRoleService;
-import com.diplomado.tarea.repositories.RoleRepository;
-import com.diplomado.tarea.repositories.UserRepository;
+import com.diplomado.tarea.dto.UserRoleDTO;
 import com.diplomado.tarea.repositories.UserRoleRepository;
+import com.diplomado.tarea.services.UserRoleService;
+import com.diplomado.tarea.services.mapper.UserRoleMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public final class UserRoleServiceImpl implements UserRoleService {
     private final UserRoleRepository userRoleRepository;
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final UserRoleMapper userRoleMapper;
 
-    public UserRoleServiceImpl(final UserRoleRepository userRoleRepository, final UserRepository userRepository, final RoleRepository roleRepository) {
+    public UserRoleServiceImpl(UserRoleRepository userRoleRepository, UserRoleMapper userRoleMapper) {
         this.userRoleRepository = userRoleRepository;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.userRoleMapper = userRoleMapper;
     }
 
     @Override
-    public List<UserRole> getUserRoles() {
-        return userRoleRepository.findAll();
+    public List<UserRoleDTO> getUserRoles() {
+        return userRoleRepository.findAll()
+                .stream()
+                .map(userRoleMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<UserRole> getUsersByRole(final Role role) {
-        return userRoleRepository.findAllByRoles_Id(role.getId());
+    public Optional<UserRoleDTO> getUserRole(Integer userRoleId) {
+        return userRoleRepository.findById(userRoleId).map(userRoleMapper::toDto);
+
     }
 
     @Override
-    public List<UserRole> getRolesByUser(final User user) {
-        return userRoleRepository.findAllByUsers_Id(user.getId());
+    public List<UserRoleDTO> getUsersByRole(Integer role) {
+        return userRoleRepository.findAllByRoles_Id(role)
+                .stream()
+                .map(userRoleMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public UserRole save(final UserRole userRole) {
-        return userRoleRepository.save(userRole);
+    public List<UserRoleDTO> getRolesByUser(Long user) {
+        return userRoleRepository.findAllByUsers_Id(user)
+                .stream()
+                .map(userRoleMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void delete(Integer userRoleId) {
+    public List<UserRoleDTO> createUserRoles(UserRoleDTO... userRoles) {
+        List<UserRoleDTO> createdUserRoles = userRoleRepository.saveAll(
+                        Arrays.stream(userRoles)
+                                .map(userRoleMapper::toEntity)
+                                .collect(Collectors.toList())
+                ).stream()
+                .map(userRoleMapper::toDto)
+                .collect(Collectors.toList());
 
+        return createdUserRoles;
     }
+
+    @Override
+    public void deleteUserRole(Integer userRoleId) {
+        userRoleRepository.deleteById(userRoleId);
+    }
+
+    @Override
+    public UserRoleDTO setInactive(Integer userRoleId) {
+        return userRoleRepository.findById(userRoleId)
+                .map(userRole -> {
+                    userRole.setActive(false);
+                    return userRoleMapper.toDto(userRole);
+                })
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró UserRoleDTO con ID: " + userRoleId));
+    }
+
+
 }

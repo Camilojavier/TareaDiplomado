@@ -1,9 +1,8 @@
 package com.diplomado.tarea.web.rest;
 
-import com.diplomado.tarea.domain.entities.Role;
-import com.diplomado.tarea.domain.entities.User;
-import com.diplomado.tarea.domain.entities.UserRole;
-import com.diplomado.tarea.domain.services.UserRoleService;
+import com.diplomado.tarea.dto.UserDTO;
+import com.diplomado.tarea.dto.UserRoleDTO;
+import com.diplomado.tarea.services.UserRoleService;
 import com.diplomado.tarea.web.API;
 import com.diplomado.tarea.web.UserRoleAPI;
 import org.springframework.http.ResponseEntity;
@@ -12,31 +11,61 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(UserRoleAPI.userRoleRoute)
-public class UserRoleController {
+public final class UserRoleController {
     private final UserRoleService userRoleService;
 
-    public UserRoleController(final UserRoleService userRoleService) {
+    public UserRoleController(UserRoleService userRoleService) {
         this.userRoleService = userRoleService;
     }
 
     @GetMapping
-    public ResponseEntity<List<UserRole>>getUserRoles() {
+    public ResponseEntity<List<UserRoleDTO>>getUserRoles() {
         return ResponseEntity.ok().body(userRoleService.getUserRoles());
     }
-    @GetMapping(path = API.rolePath)
-    public ResponseEntity<List<UserRole>>getUsersByRole(@PathVariable final Role role) {
-        return ResponseEntity.ok().body(userRoleService.getUsersByRole(role));
+    @GetMapping(path = UserRoleAPI.roleRoute + API.rolePath)
+    public ResponseEntity<List<UserRoleDTO>>getUsersByRole(@PathVariable Integer roleId) {
+        return ResponseEntity.ok().body(userRoleService.getUsersByRole(roleId));
     }
-    @GetMapping(path = API.userPath)
-    public ResponseEntity<List<UserRole>>getRolesByUser(@PathVariable final User user) {
-        return ResponseEntity.ok().body(userRoleService.getRolesByUser(user));
+    @GetMapping(path = UserRoleAPI.userRoute + API.userPath)
+    public ResponseEntity<List<UserRoleDTO>>getRolesByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok().body(userRoleService.getRolesByUser(userId));
     }
     @PostMapping
-    public ResponseEntity<UserRole>saveUserRole(@RequestBody final UserRole userRole) throws URISyntaxException {
-        final UserRole newUserRole = userRoleService.save(userRole);
-        return ResponseEntity.created(new URI(UserRoleAPI.userRoleRoute + newUserRole.getId())).body(newUserRole);
+    public ResponseEntity<List<UserRoleDTO>> createUserRole(@RequestBody UserRoleDTO... userRoles) throws URISyntaxException {
+        List<UserRoleDTO> newUserRoles = userRoleService.createUserRoles(userRoles);
+
+        if (!newUserRoles.isEmpty()) {
+            return ResponseEntity.created(new URI(UserRoleAPI.userRoleRoute)).body(newUserRoles);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
+
+    @DeleteMapping(UserRoleAPI.userRolePath)
+    public ResponseEntity<Void> deleteUserRole(@PathVariable Integer userRoleId) {
+        if (userRoleService.getUserRole(userRoleId).isPresent()) {
+            userRoleService.deleteUserRole(userRoleId);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @RequestMapping(value = UserRoleAPI.userRolePath, method = RequestMethod.PATCH)
+    public ResponseEntity<UserRoleDTO> setInactive(@PathVariable Integer userRoleId) {
+        Optional<UserRoleDTO> optionalUserRole = userRoleService.getUserRole(userRoleId);
+
+        if (optionalUserRole.isPresent()) {
+            UserRoleDTO userRole = userRoleService.setInactive(userRoleId);
+            return ResponseEntity.ok(userRole);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }

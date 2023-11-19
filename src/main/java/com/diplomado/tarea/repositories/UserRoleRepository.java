@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRoleRepository extends JpaRepository<UserRole, Integer> {
-    List<UserRole> findAllByRoles_Id(final Integer roleId);
-    List<UserRole>findAllByUsers_Id(final Long userId);
+    List<UserRole> findAllByRoles_Id(Integer roleId);
+    List<UserRole>findAllByUsers_Id(Long userId);
 }

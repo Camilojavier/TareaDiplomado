@@ -1,9 +1,11 @@
 package com.diplomado.tarea.services.impl;
 
-import com.diplomado.tarea.domain.entities.User;
 import com.diplomado.tarea.dto.UserDTO;
+import com.diplomado.tarea.dto.UserDetailDTO;
+import com.diplomado.tarea.repositories.UserDetailRepository;
 import com.diplomado.tarea.repositories.UserRepository;
 import com.diplomado.tarea.services.UserService;
+import com.diplomado.tarea.services.mapper.UserDetailMapper;
 import com.diplomado.tarea.services.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
@@ -15,34 +17,48 @@ import java.util.stream.Collectors;
 public final class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserDetailRepository userDetailRepository;
     private final UserMapper userMapper;
+    private final UserDetailMapper userDetailMapper;
 
-    public UserServiceImpl(final UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserDetailRepository userDetailRepository, UserMapper userMapper, UserDetailMapper userDetailMapper) {
         this.userRepository = userRepository;
+        this.userDetailRepository = userDetailRepository;
         this.userMapper = userMapper;
+        this.userDetailMapper = userDetailMapper;
     }
 
     @Override
     public List<UserDTO> getUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(userMapper::toDTO)
+                .map(userMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<UserDTO> getUser(final Long userId) {
-        return userRepository.findById(userId).map(userMapper::toDTO);
+    public List<UserDetailDTO> getUsersDetailed() {
+        return userDetailRepository.findAll().stream().map(userDetailMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<UserDTO> getUser(Long userId) {
+        return userRepository.findById(userId).map(userMapper::toDto);
 
     }
 
     @Override
-    public UserDTO saveUser(final UserDTO user) {
-        return  userMapper.toDTO(userRepository.save(userMapper.toEntity(user)));
+    public Optional<UserDetailDTO> getUserDetailed(Long userId) {
+        return userDetailRepository.findById(userId).map(userDetailMapper::toDto);
     }
 
     @Override
-    public void delete(final Long userId) {
+    public UserDTO createUser(UserDTO user) {
+        return  userMapper.toDto(userRepository.save(userMapper.toEntity(user)));
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
 }

@@ -1,10 +1,14 @@
 package com.diplomado.tarea.services;
 
-import com.diplomado.tarea.domain.entities.Role;
+import com.diplomado.tarea.dto.RoleDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RoleService {
-    List<Role> getRoles();
-    Role save(final Role role);
+    List<RoleDTO> getRoles();
+    Optional<RoleDTO> getRole(Integer roleId);
+    RoleDTO createRole(RoleDTO role);
+    void deleteRole(Integer roleId);
+
 }

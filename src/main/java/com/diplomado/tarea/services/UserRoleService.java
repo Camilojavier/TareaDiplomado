@@ -1,16 +1,18 @@
 package com.diplomado.tarea.services;
 
-import com.diplomado.tarea.domain.entities.Role;
-import com.diplomado.tarea.domain.entities.User;
-import com.diplomado.tarea.domain.entities.UserRole;
+import com.diplomado.tarea.dto.RoleDTO;
+import com.diplomado.tarea.dto.UserDTO;
+import com.diplomado.tarea.dto.UserRoleDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserRoleService {
-    List<UserRole> getUserRoles();
-    List<UserRole> getUsersByRole(final Role role);
-    List<UserRole> getRolesByUser(final User user);
-    UserRole save(final UserRole userRole);
-    void delete(final Integer userRoleId);
+    List<UserRoleDTO> getUserRoles();
+    Optional<UserRoleDTO>getUserRole(Integer userRoleId);
+    List<UserRoleDTO> getUsersByRole(Integer roleId);
+    List<UserRoleDTO> getRolesByUser(Long userId);
+    List<UserRoleDTO> createUserRoles(UserRoleDTO... userRole);
+    void deleteUserRole(Integer userRoleId);
+    UserRoleDTO setInactive(Integer userRoleId);
 }
