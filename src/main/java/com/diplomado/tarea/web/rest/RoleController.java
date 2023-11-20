@@ -2,7 +2,8 @@ package com.diplomado.tarea.web.rest;
 
 import com.diplomado.tarea.dto.RoleDTO;
 import com.diplomado.tarea.services.RoleService;
-import com.diplomado.tarea.web.RoleAPI;
+import com.diplomado.tarea.web.api.RoleAPI;
+import com.diplomado.tarea.web.exceptions.RoleNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,9 +35,8 @@ public final class RoleController {
     }
     @GetMapping(RoleAPI.rolePath)
     public ResponseEntity<RoleDTO> readRole(@PathVariable Integer roleId) {
-        return roleService.getRole(roleId)
-                .map(role -> ResponseEntity.ok().body(role))
-                .orElse(ResponseEntity.notFound().build());
+        RoleDTO role = roleService.getRole(roleId).orElseThrow(() -> new RoleNotFoundException(roleId));
+        return ResponseEntity.ok().body(role);
     }
     @DeleteMapping(RoleAPI.rolePath)
     public ResponseEntity<Void> deleteRole(@PathVariable Integer roleId){

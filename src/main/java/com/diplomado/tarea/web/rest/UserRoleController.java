@@ -1,14 +1,19 @@
 package com.diplomado.tarea.web.rest;
 
+import com.diplomado.tarea.dto.UserDTO;
 import com.diplomado.tarea.dto.UserRoleDTO;
 import com.diplomado.tarea.services.UserRoleService;
-import com.diplomado.tarea.web.API;
-import com.diplomado.tarea.web.UserRoleAPI;
+import com.diplomado.tarea.web.api.API;
+import com.diplomado.tarea.web.api.UserRoleAPI;
+import com.diplomado.tarea.web.exceptions.RoleByUserNotFoundException;
+import com.diplomado.tarea.web.exceptions.UserByRoleNotFoundException;
+import com.diplomado.tarea.web.exceptions.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,17 +31,27 @@ public final class UserRoleController {
         return ResponseEntity.ok().body(userRoleService.getUserRoles());
     }
     @GetMapping(path = UserRoleAPI.roleRoute + API.rolePath)
-    public ResponseEntity<List<UserRoleDTO>>getUsersByRole(@PathVariable Integer roleId) {
-        return ResponseEntity.ok().body(userRoleService.getUsersByRole(roleId));
+    public ResponseEntity<List<UserRoleDTO>> getUsersByRole(@PathVariable Integer roleId) {
+        List<UserRoleDTO> userRoles = userRoleService.getUsersByRole(roleId);
+        if (userRoles.isEmpty()) {
+            throw new UserByRoleNotFoundException(roleId);
+        }
+        return ResponseEntity.ok().body(userRoles);
     }
     @GetMapping(path = UserRoleAPI.userRoute + API.userPath)
     public ResponseEntity<List<UserRoleDTO>>getRolesByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok().body(userRoleService.getRolesByUser(userId));
+        List<UserRoleDTO> userRoles = userRoleService.getRolesByUser(userId);
+        if (userRoles.isEmpty()) {
+            throw new RoleByUserNotFoundException(userId);
+        }
+        return ResponseEntity.ok().body(userRoles);
     }
     @PostMapping
     public ResponseEntity<List<UserRoleDTO>> createUserRole(@RequestBody UserRoleDTO... userRoles) throws URISyntaxException {
+        for (UserRoleDTO userRole: userRoles) {
+            userRole.setCreatedAt(LocalDateTime.now());
+        }
         List<UserRoleDTO> newUserRoles = userRoleService.createUserRoles(userRoles);
-
         if (!newUserRoles.isEmpty()) {
             return ResponseEntity.created(new URI(UserRoleAPI.userRoleRoute)).body(newUserRoles);
         } else {

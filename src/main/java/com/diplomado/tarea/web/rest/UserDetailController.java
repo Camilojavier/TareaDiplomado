@@ -3,13 +3,17 @@ package com.diplomado.tarea.web.rest;
 import com.diplomado.tarea.dto.UserDTO;
 import com.diplomado.tarea.dto.UserDetailDTO;
 import com.diplomado.tarea.services.UserDetailService;
-import com.diplomado.tarea.web.UserDetailAPI;
+import com.diplomado.tarea.services.UserService;
+import com.diplomado.tarea.web.api.UserDetailAPI;
+import com.diplomado.tarea.web.exceptions.UserDetailNotFoundException;
+import com.diplomado.tarea.web.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +21,11 @@ import java.util.Optional;
 @RequestMapping(UserDetailAPI.userDetailRoute)
 public final class UserDetailController {
     private final UserDetailService userDetailService;
+    private final UserService userService;
 
-    public UserDetailController(UserDetailService userDetailService) {
+    public UserDetailController(UserDetailService userDetailService, UserService userService) {
         this.userDetailService = userDetailService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -28,21 +34,25 @@ public final class UserDetailController {
     }
     @GetMapping(UserDetailAPI.userPath)
     public ResponseEntity<UserDetailDTO> getDetailByUser(@PathVariable Long userId) {
-        return userDetailService.getUserDetail(userId)
-                .map(userDetail -> ResponseEntity.ok().body(userDetail))
-                .orElse(ResponseEntity.notFound().build());
+        UserDetailDTO userDetail = userDetailService.getUserDetail(userId).orElseThrow(() -> new UserDetailNotFoundException(userId));
+        return ResponseEntity.ok().body(userDetail);
     }
 
     @PostMapping
-    public ResponseEntity<UserDetailDTO> saveUserDetail(@RequestBody UserDetailDTO userDetail) throws URISyntaxException {
+    public ResponseEntity<UserDetailDTO> createUserDetail(@RequestParam(required = false, defaultValue = "false") boolean createUser, @RequestBody UserDetailDTO userDetail) throws URISyntaxException {
         final UserDTO user = userDetail.getUser();
+        if (createUser) {
+            user.setCreatedAt(LocalDateTime.now());
+            UserDTO createdUser = userService.createUser(user);
+            userDetail.getUser().setId(createdUser.getId());
+        }
         if (userDetailService.getUserDetail(user.getId()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         final UserDetailDTO newUserDetail = userDetailService.createUserDetail(userDetail);
-
         return ResponseEntity.created(new URI(UserDetailAPI.userDetailRoute + newUserDetail.getId())).body(newUserDetail);
     }
+
     @DeleteMapping(UserDetailAPI.userPath)
     public ResponseEntity<Void> deleteUserDetail(@PathVariable Long userId) {
         if (userDetailService.getUserDetail(userId).isPresent()) {
