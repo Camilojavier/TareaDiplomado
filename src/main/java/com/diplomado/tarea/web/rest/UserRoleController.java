@@ -1,13 +1,11 @@
 package com.diplomado.tarea.web.rest;
 
-import com.diplomado.tarea.dto.UserDTO;
 import com.diplomado.tarea.dto.UserRoleDTO;
 import com.diplomado.tarea.services.UserRoleService;
 import com.diplomado.tarea.web.api.API;
 import com.diplomado.tarea.web.api.UserRoleAPI;
 import com.diplomado.tarea.web.exceptions.RoleByUserNotFoundException;
 import com.diplomado.tarea.web.exceptions.UserByRoleNotFoundException;
-import com.diplomado.tarea.web.exceptions.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

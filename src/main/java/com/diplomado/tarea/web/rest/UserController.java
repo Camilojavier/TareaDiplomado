@@ -4,7 +4,6 @@ import com.diplomado.tarea.dto.UserDTO;
 import com.diplomado.tarea.services.UserService;
 import com.diplomado.tarea.web.api.UserAPI;
 import com.diplomado.tarea.web.exceptions.UserNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
