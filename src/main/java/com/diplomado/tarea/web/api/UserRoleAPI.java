@@ -1,4 +1,4 @@
-package com.diplomado.tarea.web;
+package com.diplomado.tarea.web.api;
 
 public interface UserRoleAPI extends API{
     String userRoleRoute = apiVersion + "/userRoles";
