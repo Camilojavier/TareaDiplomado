@@ -16,4 +16,5 @@ public interface Annotations {
     String ROLE_ID = "role_id";
     String CREATED_AT = "created_at";
     int ALLOCATION_SIZE = 1;
+    String TIMESTAMP = "TIMESTAMP";
 }
