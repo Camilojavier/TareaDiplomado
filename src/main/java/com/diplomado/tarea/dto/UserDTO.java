@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,7 +15,7 @@ public final class UserDTO implements Serializable {
     private String username;
     private String password;
     private String email;
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
     public UserDTO() {
     }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,8 +17,8 @@ public final class UserRole implements Annotations{
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = USER_ROLE_SEQUENCE)
     private Integer id;
     private Boolean active;
-    @Column(name = CREATED_AT)
-    private Timestamp createdAt;
+    @Column(name = CREATED_AT, columnDefinition = TIMESTAMP)
+    private LocalDateTime createdAt;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = USER_ID)
     private User users;
@@ -29,7 +29,7 @@ public final class UserRole implements Annotations{
     public UserRole() {
     }
 
-    public UserRole(Boolean active, Timestamp createdAt, User users, Role roles) {
+    public UserRole(Boolean active, LocalDateTime createdAt, User users, Role roles) {
         this.active = active;
         this.createdAt = createdAt;
         this.users = users;
