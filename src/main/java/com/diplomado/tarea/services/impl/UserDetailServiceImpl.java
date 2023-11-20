@@ -5,13 +5,15 @@ import com.diplomado.tarea.repositories.UserDetailRepository;
 import com.diplomado.tarea.services.UserDetailService;
 import com.diplomado.tarea.services.mapper.UserDetailMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public final class UserDetailServiceImpl implements UserDetailService {
+@Transactional
+public class UserDetailServiceImpl implements UserDetailService {
 
     private final UserDetailRepository userDetailRepository;
 
@@ -23,6 +25,7 @@ public final class UserDetailServiceImpl implements UserDetailService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDetailDTO> getUserDetails() {
         return userDetailRepository.findAll()
                 .stream()
@@ -31,6 +34,7 @@ public final class UserDetailServiceImpl implements UserDetailService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<UserDetailDTO> getUserDetail(Long userId) {
         return userDetailRepository.findByUsers_Id(userId).map(userDetailMapper::toDto);
     }

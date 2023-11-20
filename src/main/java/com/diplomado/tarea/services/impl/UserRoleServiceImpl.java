@@ -6,6 +6,7 @@ import com.diplomado.tarea.services.UserRoleService;
 import com.diplomado.tarea.services.mapper.UserRoleMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +14,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public final class UserRoleServiceImpl implements UserRoleService {
+@Transactional
+public class UserRoleServiceImpl implements UserRoleService {
     private final UserRoleRepository userRoleRepository;
     private final UserRoleMapper userRoleMapper;
 
@@ -23,6 +25,7 @@ public final class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserRoleDTO> getUserRoles() {
         return userRoleRepository.findAll()
                 .stream()
@@ -31,12 +34,14 @@ public final class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<UserRoleDTO> getUserRole(Integer userRoleId) {
         return userRoleRepository.findById(userRoleId).map(userRoleMapper::toDto);
 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserRoleDTO> getUsersByRole(Integer role) {
         return userRoleRepository.findAllByRoles_Id(role)
                 .stream()
@@ -45,6 +50,7 @@ public final class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserRoleDTO> getRolesByUser(Long user) {
         return userRoleRepository.findAllByUsers_Id(user)
                 .stream()
