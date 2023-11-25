@@ -44,9 +44,4 @@ public class UserDetailServiceImpl implements UserDetailService {
         return  userDetailMapper.toDto(userDetailRepository.save(userDetailMapper.toEntity(userDetail)));
 
     }
-
-    @Override
-    public void deleteUserDetail(Long userId) {
-        userDetailRepository.deleteByUsers_Id(userId);
-    }
 }

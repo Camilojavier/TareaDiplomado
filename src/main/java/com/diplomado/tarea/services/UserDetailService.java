@@ -10,6 +10,5 @@ public interface UserDetailService {
     List<UserDetailDTO> getUserDetails();
     Optional<UserDetailDTO> getUserDetail(Long userId);
     UserDetailDTO createUserDetail(UserDetailDTO detail);
-    void deleteUserDetail(Long userId);
 
 }
