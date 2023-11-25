@@ -51,16 +51,6 @@ public final class UserDetailController {
         final UserDetailDTO newUserDetail = userDetailService.createUserDetail(userDetail);
         return ResponseEntity.created(new URI(UserDetailAPI.userDetailRoute + newUserDetail.getId())).body(newUserDetail);
     }
-
-    @DeleteMapping(UserDetailAPI.userPath)
-    public ResponseEntity<Void> deleteUserDetail(@PathVariable Long userId) {
-        if (userDetailService.getUserDetail(userId).isPresent()) {
-            userDetailService.deleteUserDetail(userId);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
     @PutMapping(UserDetailAPI.userPath)
     public ResponseEntity<UserDetailDTO> updateUserDetail(@PathVariable Long userId, @RequestBody UserDetailDTO userDetail) {
         validateUserIdAndUserDetail(userId, userDetail);
