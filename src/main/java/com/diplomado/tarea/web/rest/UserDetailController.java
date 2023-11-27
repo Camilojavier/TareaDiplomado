@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,19 +50,21 @@ public final class UserDetailController {
         if (userDetailService.getUserDetail(user.getId()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
+        final LocalDate birth =  userDetail.getBirthday().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        userDetail.setAge(Period.between(birth, LocalDate.now()).getYears());
         final UserDetailDTO newUserDetail = userDetailService.createUserDetail(userDetail);
         return ResponseEntity.created(new URI(UserDetailAPI.userDetailRoute + newUserDetail.getId())).body(newUserDetail);
     }
     @PutMapping(UserDetailAPI.userPath)
     public ResponseEntity<UserDetailDTO> updateUserDetail(@PathVariable Long userId, @RequestBody UserDetailDTO userDetail) {
         validateUserIdAndUserDetail(userId, userDetail);
-
         Optional<UserDetailDTO> existingUserDetail = userDetailService.getUserDetail(userId);
         if (existingUserDetail.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         validateUserDetailIdMatching(existingUserDetail.get(), userDetail);
+        userService.createUser(userDetail.getUser());
 
         return ResponseEntity.ok().body(userDetailService.createUserDetail(userDetail));
     }
