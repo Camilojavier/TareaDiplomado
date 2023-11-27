@@ -1,6 +1,8 @@
 package com.diplomado.tarea.web.rest;
 
 import com.diplomado.tarea.dto.UserDTO;
+import com.diplomado.tarea.dto.UserRoleDTO;
+import com.diplomado.tarea.services.UserRoleService;
 import com.diplomado.tarea.services.UserService;
 import com.diplomado.tarea.web.api.UserAPI;
 import com.diplomado.tarea.web.exceptions.UserNotFoundException;
@@ -17,9 +19,11 @@ import java.util.Optional;
 @RequestMapping(UserAPI.userRoute)
 public final class UserController {
     private final UserService userService;
+    private final UserRoleService userRoleService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserRoleService userRoleService) {
         this.userService = userService;
+        this.userRoleService = userRoleService;
     }
 
     @GetMapping
@@ -47,6 +51,10 @@ public final class UserController {
     @DeleteMapping(UserAPI.userPath)
     public ResponseEntity<Void> deleteUser(@PathVariable Long userId){
         if (userService.getUser(userId).isPresent()) {
+            List<UserRoleDTO> userRoles = userRoleService.getRolesByUser(userId);
+            for (UserRoleDTO userRole: userRoles) {
+                userRoleService.deleteUserRole(userRole.getId());
+            }
             userService.deleteUser(userId);
             return ResponseEntity.noContent().build();
         } else {
