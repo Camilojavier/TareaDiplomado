@@ -8,5 +8,4 @@ import java.util.Optional;
 public interface UserDetailRepository extends JpaRepository<UserDetail, Long> {
 
     Optional<UserDetail> findByUsers_Id(Long userId);
-    void deleteByUsers_Id(Long userId);
 }
