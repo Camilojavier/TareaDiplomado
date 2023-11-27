@@ -1,7 +1,9 @@
 package com.diplomado.tarea.web.rest;
 
 import com.diplomado.tarea.dto.RoleDTO;
+import com.diplomado.tarea.dto.UserRoleDTO;
 import com.diplomado.tarea.services.RoleService;
+import com.diplomado.tarea.services.UserRoleService;
 import com.diplomado.tarea.web.api.RoleAPI;
 import com.diplomado.tarea.web.exceptions.RoleNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +18,11 @@ import java.util.Optional;
 @RequestMapping(RoleAPI.roleRoute)
 public final class RoleController {
     private final RoleService roleService;
+    private final UserRoleService userRoleService;
 
-    public RoleController(RoleService roleService) {
+    public RoleController(RoleService roleService, UserRoleService userRoleService) {
         this.roleService = roleService;
+        this.userRoleService = userRoleService;
     }
     @GetMapping
     public ResponseEntity<List<RoleDTO>> readRoles() {
@@ -41,6 +45,10 @@ public final class RoleController {
     @DeleteMapping(RoleAPI.rolePath)
     public ResponseEntity<Void> deleteRole(@PathVariable Integer roleId){
         if (roleService.getRole(roleId).isPresent()) {
+            List<UserRoleDTO> userRoles = userRoleService.getUsersByRole(roleId);
+            for (UserRoleDTO userRole: userRoles) {
+                userRoleService.deleteUserRole(userRole.getId());
+            }
             roleService.deleteRole(roleId);
             return ResponseEntity.noContent().build();
         } else {
